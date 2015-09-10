@@ -11,7 +11,7 @@ mysql = MySQLConnector('the_wall_flask')
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	return render_template('signup.html')
 
 @app.route('/users', methods=['POST'])
 def create():
@@ -46,5 +46,25 @@ def create():
 	insert_query = "INSERT INTO users (email, first_name, last_name, password, created_at) VALUES ('{}', '{}', '{}', '{}', NOW())".format(email, first_name, last_name, pw_hash)
 	mysql.run_mysql_query(insert_query)
 	return redirect(url_for('index'))
+
+@app.route('/signin', methods=['POST','GET'])
+def signin():
+	if request.method == 'GET':
+		return render_template('signin.html')
+	email = request.form['email']
+	password = request.form['password']
+	user_query = "SELECT * FROM users WHERE email = '{}' LIMIT 1".format(email)
+	user = mysql.fetch(user_query)
+
+	if user:
+		if bcrypt.check_password_hash(user[0]['password'], password):
+			session['id'] = user[0]['id']
+			return redirect(url_for('show'))
+	flash('Invalid email or password')
+	return redirect(url_for('signin'))
+
+@app.route('/messages')
+def show():
+	return render_template('messages.html')
 
 app.run(debug=True)
