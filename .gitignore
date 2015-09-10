@@ -1,0 +1,6 @@
+# Virtualenv
+venv
+.Python
+
+# MacOSX
+.DS_Store
