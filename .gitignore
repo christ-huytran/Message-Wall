@@ -2,5 +2,8 @@
 venv
 .Python
 
+# pyc
+*.pyc
+
 # MacOSX
 .DS_Store
