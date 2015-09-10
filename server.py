@@ -59,12 +59,26 @@ def signin():
 	if user:
 		if bcrypt.check_password_hash(user[0]['password'], password):
 			session['id'] = user[0]['id']
+			session['first_name'] = user[0]['first_name']
 			return redirect(url_for('show'))
 	flash('Invalid email or password')
 	return redirect(url_for('signin'))
 
-@app.route('/messages')
-def show():
-	return render_template('messages.html')
+@app.route('/signout')
+def signout():
+	session.pop('id')
+	session.pop('first_name')
+	return redirect(url_for('index'))
 
+@app.route('/messages', methods=['GET', 'POST'])
+def show():
+	if request.method == 'GET':
+		return render_template('messages.html')
+	message = request.form['message']
+	if len(message) < 1:
+		flash('Message cannot be blank')
+	else:
+		insert_msg_query = "INSERT INTO messages (message, user_id, created_at) VALUES ('{}','{}',NOW())".format(message, session['id'])
+		mysql.run_mysql_query(insert_msg_query)
+	return redirect(url_for('show'))
 app.run(debug=True)

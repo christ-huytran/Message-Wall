@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+{% block content %}
+<div class="row">
+	<form class="col s12" action='/messages' method='post'>
+		<div class="row">
+			<div class="input-field col s12">
+				<textarea name="message" class="materialize-textarea"></textarea>
+				<label for="message">Post a message</label>
+			</div>
+		</div>
+		<div class="right-align">
+			<button class="btn waves-effect waves-light" type="submit" name="action">Post<i class="material-icons">send</i>
+			</button>
+		</div>
+		{% with msgs = get_flashed_messages() %}
+			{% if msgs %}
+				{% for msg in msgs %}
+					<p>{{ msg }}</p>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+	</form>
+</div>
+{% endblock %}
