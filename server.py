@@ -80,7 +80,6 @@ def show():
 		get_msgs_query = "SELECT messages.id, messages.message, CONCAT(users.first_name, ' ', users.last_name) AS message_author, messages.created_at AS message_created_at, GROUP_CONCAT(comments.comment SEPARATOR '-----') AS comments, GROUP_CONCAT(CONCAT(users2.first_name, ' ', users2.last_name)) AS comment_author, GROUP_CONCAT(comments.created_at) AS comment_created_at FROM messages JOIN users ON users.id = messages.user_id LEFT JOIN comments ON messages.id = comments.message_id LEFT JOIN users AS users2 ON users2.id = comments.user_id GROUP BY messages.id ORDER BY messages.created_at DESC"
 
 		messages = mysql.fetch(get_msgs_query)
-		print messages
 		for msg in messages:
 			if msg['comments']:
 				msg['comments'] = msg['comments'].split('-----')
