@@ -12,13 +12,21 @@
 			<button class="btn waves-effect waves-light" type="submit" name="action">Post<i class="material-icons">send</i>
 			</button>
 		</div>
-		{% with msgs = get_flashed_messages() %}
-			{% if msgs %}
-				{% for msg in msgs %}
-					<p>{{ msg }}</p>
-				{% endfor %}
-			{% endif %}
-		{% endwith %}
+		{% include 'flash.html' %}
 	</form>
+</div>
+<div class='row'>
+	<ul class="collection">
+		{% if messages %}
+		{% for msg in messages %}
+		<li class="collection-item avatar">
+			<i class="material-icons circle green">insert_chart</i>
+			<span class="title"><b>{{ msg.author }}</b> - {{ msg.created_at.strftime('%B %d, %Y') }}</span>
+			<p>{{ msg.message }}</p>
+			<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+		</li>
+		{% endfor %}
+		{% endif %}
+	</ul>
 </div>
 {% endblock %}

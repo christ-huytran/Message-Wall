@@ -73,7 +73,9 @@ def signout():
 @app.route('/messages', methods=['GET', 'POST'])
 def show():
 	if request.method == 'GET':
-		return render_template('messages.html')
+		get_msgs_query = "SELECT messages.id, messages.message, CONCAT(users.first_name, ' ', users.last_name) AS author, messages.created_at FROM messages JOIN users ON users.id = messages.user_id ORDER BY messages.created_at DESC"
+		messages = mysql.fetch(get_msgs_query)
+		return render_template('messages.html', messages=messages)
 	message = request.form['message']
 	if len(message) < 1:
 		flash('Message cannot be blank')
@@ -81,4 +83,5 @@ def show():
 		insert_msg_query = "INSERT INTO messages (message, user_id, created_at) VALUES ('{}','{}',NOW())".format(message, session['id'])
 		mysql.run_mysql_query(insert_msg_query)
 	return redirect(url_for('show'))
+
 app.run(debug=True)
