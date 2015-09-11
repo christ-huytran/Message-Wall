@@ -21,9 +21,41 @@
 		{% for msg in messages %}
 		<li class="collection-item avatar">
 			<i class="material-icons circle green">insert_chart</i>
-			<span class="title"><b>{{ msg.author }}</b> - {{ msg.created_at.strftime('%B %d, %Y') }}</span>
+			<span class="title"><b>{{ msg.message_author }}</b> - {{ msg.message_created_at.strftime('%B %d, %Y') }}</span>
 			<p>{{ msg.message }}</p>
 			<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+
+			<!-- COMMENTS -->
+			{% if msg.comments %}
+			{% for comment in msg.comments %}
+			<ul class="collection">
+				<li class="collection-item avatar">
+					<i class="material-icons circle green">insert_chart</i>
+					<span class="title"><b>{{ msg.comment_author[loop.index - 1] }}</b> - {{ msg.comment_created_at[loop.index - 1].strftime('%B %d, %Y') }}</span>
+					<p>{{ comment }}</p>
+					<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+				</li>
+			</ul>
+			{% endfor %}
+			{% endif %}
+			<!-- END OF COMMENTS -->
+			<div class="row">
+				<form class="col s12" action='/comments' method='post'>
+					<div class="row">
+						<div class="input-field col s12">
+							<textarea name="comment" class="materialize-textarea"></textarea>
+							<label for="comment">Post a comment</label>
+							<input type='hidden' name='message_id' value='{{ msg.id }}'>
+							<div class="right-align">
+								<button class="btn waves-effect waves-light" type="submit" name="action">Comment<i class="material-icons">send</i>
+								</button>
+							</div>
+						</div>
+					</div>
+					{% include 'flash.html' %}
+				</form>
+			</div>
+
 		</li>
 		{% endfor %}
 		{% endif %}
